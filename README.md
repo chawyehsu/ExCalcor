@@ -5,3 +5,4 @@ Another Expression Calculator, using java/antlr4. Just for learning Compilers Pr
 ### How to
 1. Import into Eclipse(you have to install **Xtext** and **Antlr4 IDE** first).
 2. Run **Project** -> **Clean** to clean and build the project.
+3. Run **ExCalcorRunner.java** as Java Application.
