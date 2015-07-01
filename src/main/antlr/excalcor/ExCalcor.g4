@@ -283,7 +283,7 @@ primary returns [BigDecimal value]
 atom returns [BigDecimal value]
   // 数值字面量：终结符，直接返回数值
   :  NUMBER {
-       $value = new BigDecimal($NUMBER.text);
+       $value = new BigDecimal($NUMBER.text, new MathContext(15));
      }
   // 标识符变量：终结符，返回变量的值，若变量未定义则提示未定义
   |  VARIABLE {
@@ -307,7 +307,7 @@ atom returns [BigDecimal value]
 
 // 数值常量定义：十进制，无符号，支持科学计数法
 NUMBER
-  :  INTEGRAL (FRACTION |) (EXPONENT |)
+  :  INTEGRAL (FRACTION)? (EXPONENT)?
   ;
 
 // 布尔常量定义：true, TRUE, false, FALSE
@@ -317,7 +317,7 @@ BOOLEAN
 
 // 标识符变量定义：字母或下划线开头，跟任意长度的字母、数字或下划线
 VARIABLE
-  :  (LETTER | UNDERLINE) ((LETTER | DIGIT | UNDERLINE )+ |)
+  :  (LETTER | UNDERLINE) ((LETTER | DIGIT | UNDERLINE )+)?
   ;
 
 // 内置函数定义
@@ -342,7 +342,7 @@ fragment  // 分数
 FRACTION:  .INTEGRAL;
 
 fragment  // 科学计数法
-EXPONENT:  ('E'|'e')('+'|'-'|)INTEGRAL;
+EXPONENT:  ('E' | 'e') ('+' | '-')? INTEGRAL;
 
 fragment  // 整数
 INTEGRAL:  DIGIT+;
@@ -351,7 +351,7 @@ fragment  // 数字
 DIGIT:     '0'..'9';
 
 fragment  // 字母
-LETTER:    'a'..'z'|'A'..'Z';
+LETTER:    'a'..'z' | 'A'..'Z';
 
 fragment  // 下划线
 UNDERLINE: '_';
