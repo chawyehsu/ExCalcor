@@ -339,7 +339,7 @@ SPACE
 
 // 范式片段
 fragment  // 分数
-FRACTION:  .INTEGRAL;
+FRACTION:  '.' INTEGRAL;
 
 fragment  // 科学计数法
 EXPONENT:  ('E' | 'e') ('+' | '-')? INTEGRAL;
