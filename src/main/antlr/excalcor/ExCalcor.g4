@@ -315,14 +315,14 @@ BOOLEAN
   :  'true' | 'false' | 'TRUE' | 'FALSE'
   ;
 
-// 标识符变量定义：字母或下划线开头，跟任意长度的字母、数字或下划线
-VARIABLE
-  :  (LETTER | UNDERLINE) ((LETTER | DIGIT | UNDERLINE )+)?
-  ;
-
 // 内置函数定义
 BUILTINFUNC
   :  'sin' | 'cos' | 'tan' | 'max' | 'min' | 'sqrt'
+  ;
+
+// 标识符变量定义：字母或下划线开头，跟任意长度的字母、数字或下划线
+VARIABLE
+  :  (LETTER | UNDERLINE) ((LETTER | DIGIT | UNDERLINE )+)?
   ;
 
 // 换行符
