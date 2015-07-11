@@ -254,7 +254,7 @@ builtInFunc returns [BigDecimal value]
        // 匹配 sqrt
        if ($BUILTINFUNC.text.equals("sqrt") ) {
          double d = Math.sqrt(
-             Double.parseDouble($brackets.value.toPlainString()));
+           Double.parseDouble($brackets.value.toPlainString()));
          $value = new BigDecimal(d, mc);
        }
      }
@@ -317,7 +317,7 @@ BOOLEAN
 
 // 内置函数定义
 BUILTINFUNC
-  :  'sin' | 'cos' | 'tan' | 'max' | 'min' | 'sqrt'
+  :  'sin' | 'cos' | 'tan' | 'sqrt'
   ;
 
 // 标识符变量定义：字母或下划线开头，跟任意长度的字母、数字或下划线
@@ -355,6 +355,3 @@ LETTER:    'a'..'z' | 'A'..'Z';
 
 fragment  // 下划线
 UNDERLINE: '_';
-
-
-
