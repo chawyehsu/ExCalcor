@@ -196,19 +196,6 @@ multExpr returns [BigDecimal value]
        )*
   ;
 
-/* 
-// 取幂表达式：双目算符，右结合，优先级：4
-powExpr returns [BigDecimal value]
-  :  a = unaryExpr {
-       $value = $a.value;
-     } (  '^' b = unaryExpr { 
-            // 使用 BigDecimal 对象自有的求幂方法：pow()。see: java.math.BigDecimal
-            $value = ($a.value.pow($b.value, new MathContext(15)));
-          }
-       )*
-  ;
-*/
-
 // 单目运算表达式：取反算符、逻辑非算符，右结合，优先级：3
 unaryExpr returns [BigDecimal value]
   :  '-' primary {
@@ -234,28 +221,44 @@ builtInFunc returns [BigDecimal value]
   :  BUILTINFUNC brackets {
        MathContext mc = new MathContext(15);
        // 匹配 sin
-       if ($BUILTINFUNC.text.equals("sin") ) {
+       if ($BUILTINFUNC.text.equals("sin")) {
          double d = Math.sin(
            Double.parseDouble($brackets.value.toPlainString()));
          $value = new BigDecimal(d, mc);
        }
        // 匹配 cos
-       if ($BUILTINFUNC.text.equals("cos") ) {
+       if ($BUILTINFUNC.text.equals("cos")) {
          double d = Math.cos(
            Double.parseDouble($brackets.value.toPlainString()));
          $value = new BigDecimal(d, mc);
        }
        // 匹配 tan
-       if ($BUILTINFUNC.text.equals("tan") ) {
+       if ($BUILTINFUNC.text.equals("tan")) {
          double d = Math.tan(
            Double.parseDouble($brackets.value.toPlainString()));
          $value = new BigDecimal(d, mc);
        }
        // 匹配 sqrt
-       if ($BUILTINFUNC.text.equals("sqrt") ) {
+       if ($BUILTINFUNC.text.equals("sqrt")) {
          double d = Math.sqrt(
            Double.parseDouble($brackets.value.toPlainString()));
          $value = new BigDecimal(d, mc);
+       }
+     }
+  |  BUILTINFUNC '(' a = expression ',' b = expression ')' {
+       if ($BUILTINFUNC.text.equals("max")) {
+         if ($a.value.compareTo($b.value) == 1) {
+           $value = $a.value;
+         } else {
+           $value = $b.value;
+         }
+       }
+       if ($BUILTINFUNC.text.equals("min")) {
+         if ($a.value.compareTo($b.value) == 1) {
+           $value = $b.value;
+         } else {
+           $value = $a.value;
+         }
        }
      }
   ;
@@ -279,7 +282,7 @@ primary returns [BigDecimal value]
      }
   ;
 
-// 原子项：数值字面量、变量或函数调用(暂时仅支持内置函数：sin, cos, tan, sqrt)
+// 原子项：数值字面量、变量或函数调用(暂时仅支持内置函数：sin, cos, tan, sqrt, max, min)
 atom returns [BigDecimal value]
   // 数值字面量：终结符，直接返回数值
   :  NUMBER {
@@ -317,7 +320,7 @@ BOOLEAN
 
 // 内置函数定义
 BUILTINFUNC
-  :  'sin' | 'cos' | 'tan' | 'sqrt'
+  :  'sin' | 'cos' | 'tan' | 'sqrt' | 'max' | 'min'
   ;
 
 // 标识符变量定义：字母或下划线开头，跟任意长度的字母、数字或下划线
