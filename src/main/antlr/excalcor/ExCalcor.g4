@@ -19,6 +19,8 @@ prog
 statement
   // 赋值语句，不输出任何信息
   :  assignment NEWLINE
+  // 删除变量
+  | removeVariable NEWLINE
   // 表达式语句，输出表达式计算结果
   |  expression NEWLINE {
        if ($expression.value != null) {
@@ -29,6 +31,17 @@ statement
   |  NEWLINE
   ;
 
+// 删除变量
+removeVariable
+  :  VARIABLE '=' '[' ']' {
+       if (ExCalcorRunner.memory.get($VARIABLE.text) != null) {
+         ExCalcorRunner.memory.remove($VARIABLE.text);
+         System.out.println("Variable '".concat($VARIABLE.text).concat("' has been removed."));
+       } else {
+         System.err.println("[Err]Variable '".concat($VARIABLE.text).concat("' never defined."));
+       }
+     }
+  ;
 
 // 赋值语句：定义变量并赋初值，优先级：13
 assignment
