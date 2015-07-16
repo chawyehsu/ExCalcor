@@ -82,9 +82,11 @@ orExpr returns [BigDecimal value]
             if (($a.value.compareTo(BigDecimal.ZERO) != 0) || 
                 ($b.value.compareTo(BigDecimal.ZERO) != 0)) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        )*
@@ -99,9 +101,11 @@ andExpr returns [BigDecimal value]
             if (($a.value.compareTo(BigDecimal.ZERO) != 0) && 
                 ($b.value.compareTo(BigDecimal.ZERO) != 0)) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
        }
      )*
@@ -115,18 +119,22 @@ equalityExpr returns [BigDecimal value]
             // 如果等于则返回1(true)
             if ($a.value.compareTo($b.value) == 0) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        |  '!=' b = comparisonExpr {
             // 如果不等于则返回1(true)
             if ($a.value.compareTo($b.value) != 0) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        )*
@@ -140,36 +148,44 @@ comparisonExpr returns [BigDecimal value]
             // 如果大于则返回1(true)
             if ($a.value.compareTo($b.value) == 1) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        |  '<' b = addiExpr {
             // 如果小于则返回1(true)
             if ($a.value.compareTo($b.value) == -1) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        |  '>=' b = addiExpr {
             // 如果大于等于则返回1(true)
             if (($a.value.compareTo($b.value) == 1) || ($a.value.compareTo($b.value) == 0)) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        |  '<=' b = addiExpr {
             // 如果小于等于则返回1(true)
             if (($a.value.compareTo($b.value) == -1) || ($a.value.compareTo($b.value) == 0)) {
               $value = new BigDecimal(1, new MathContext(15));
+              $a.value = $value;
             // 否则则返回0(false)
             } else {
               $value = new BigDecimal(0, new MathContext(15));
+              $a.value = $value;
             }
           }
        )*
@@ -182,10 +198,12 @@ addiExpr returns [BigDecimal value]
      } (  '+' b = multExpr {
             // 使用 BigDecimal 对象自有的加法函数：add()。see: java.math.BigDecimal
             $value = $a.value.add($b.value, new MathContext(15));
+            $a.value = $value;
           }
        |  '-' b = multExpr {
             // 使用 BigDecimal 对象自有的减法函数：subtract()。see: java.math.BigDecimal
             $value = $a.value.subtract($b.value, new MathContext(15));
+            $a.value = $value;
           }
        )*
   ;
@@ -197,14 +215,17 @@ multExpr returns [BigDecimal value]
      } (  '*' b = unaryExpr {
             // 使用 BigDecimal 对象自有的乘法函数：multiply()。see: java.math.BigDecimal
             $value = $a.value.multiply($b.value, new MathContext(15));
+            $a.value = $value;
           }
        |  '/' b = unaryExpr {
             // 使用 BigDecimal 对象自有的除法函数：divide()。see: java.math.BigDecimal
             $value = $a.value.divide($b.value, new MathContext(15));
+            $a.value = $value;
           }
        |  '%' b = unaryExpr {
             // 使用 BigDecimal 对象自有的取余函数：remainder()。see: java.math.BigDecimal
             $value = $a.value.remainder($b.value, new MathContext(15));
+            $a.value = $value;
           }
        )*
   ;
@@ -324,11 +345,6 @@ atom returns [BigDecimal value]
 // 数值常量定义：十进制，无符号，支持科学计数法
 NUMBER
   :  INTEGRAL (FRACTION)? (EXPONENT)?
-  ;
-
-// 布尔常量定义：true, TRUE, false, FALSE
-BOOLEAN
-  :  'true' | 'false' | 'TRUE' | 'FALSE'
   ;
 
 // 内置函数定义
